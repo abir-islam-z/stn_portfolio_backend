@@ -1,4 +1,9 @@
 import { z } from 'zod';
+const socialMediaSchema = z.object({
+  github: z.string().url('Please enter a valid GitHub URL'),
+  linkedin: z.string().url('Please enter a valid LinkedIn URL'),
+  twitter: z.string().url('Please enter a valid Twitter URL'),
+});
 
 const profileCreate = z.object({
   name: z.string({
@@ -13,18 +18,11 @@ const profileCreate = z.object({
   resumeFile: z.string({
     required_error: 'Resume file is required',
   }),
-  github: z.string({
-    required_error: 'GitHub link is required',
-  }),
-  linkedin: z.string({
-    required_error: 'LinkedIn link is required',
-  }),
-  twitter: z.string({
-    required_error: 'Twitter link is required',
-  }),
   career_summary: z.string({
     required_error: 'Career summary is required',
   }),
+  socialLinks: socialMediaSchema,
+  thumbnail: z.string().url('Please enter a valid URL'),
 });
 
 const profileUpdate = profileCreate.partial();

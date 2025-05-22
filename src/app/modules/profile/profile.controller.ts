@@ -3,10 +3,6 @@ import catchAsync from '../../utils/catchAsync';
 import { ProfileService } from './profile.service';
 
 const create = catchAsync(async (req, res) => {
-  const { file } = req;
-  if (file) {
-    req.body.thumbnail = file.path;
-  }
   const { user } = req;
   const result = await ProfileService.create({
     ...req.body,

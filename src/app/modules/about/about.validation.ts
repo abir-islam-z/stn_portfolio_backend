@@ -37,6 +37,7 @@ const aboutCreate = z.object({
       }),
     }),
   ),
+  featuredImage: z.string().url('Please enter a valid URL'),
 });
 
 const aboutUpdate = aboutCreate.partial();

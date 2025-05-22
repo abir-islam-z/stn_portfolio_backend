@@ -3,10 +3,6 @@ import catchAsync from '../../utils/catchAsync';
 import { AboutService } from './about.service';
 
 const create = catchAsync(async (req, res) => {
-  const { file } = req;
-  if (file) {
-    req.body.featuredImage = file.path;
-  }
   const { user } = req;
   const result = await AboutService.create({
     ...req.body,

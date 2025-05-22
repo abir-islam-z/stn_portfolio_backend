@@ -1,13 +1,15 @@
 import { Types } from 'mongoose';
 
-export type IProfile = {
+export type TProfile = {
   name: string;
   title: string;
   experience: string;
   resumeFile: string;
-  github: string;
-  linkedin: string;
-  twitter: string;
+  socialLinks: {
+    github: string;
+    linkedin: string;
+    twitter: string;
+  };
   career_summary: string;
   thumbnail: string;
   user: Types.ObjectId;

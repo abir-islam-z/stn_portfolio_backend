@@ -1,7 +1,7 @@
-import { IProfile } from './profile.interface';
+import { TProfile } from './profile.interface';
 import { ProfileModel } from './profile.model';
 
-const create = async (data: IProfile) => {
+const create = async (data: TProfile) => {
   return await ProfileModel.findOneAndUpdate({ user: data.user }, data, {
     upsert: true,
     new: true,
@@ -16,7 +16,7 @@ const findOne = async (id: string) => {
   return await ProfileModel.findById(id);
 };
 
-const update = async (id: string, data: Partial<IProfile>) => {
+const update = async (id: string, data: Partial<TProfile>) => {
   return await ProfileModel.findByIdAndUpdate(id, data, { new: true });
 };
 

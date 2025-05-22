@@ -1,5 +1,6 @@
 import auth from '@/app/middlewares/auth';
 import validateRequest from '@/app/middlewares/validateRequest';
+import { unflattenObject } from '@/app/utils/flattenFormDataHandler';
 import { upload } from '@/app/utils/sendFileToCludinary';
 import { Router } from 'express';
 import { ProfileController } from './profile.controller';
@@ -11,6 +12,14 @@ router.post(
   '/',
   auth(),
   upload.single('thumbnail'),
+  (req, _res, next) => {
+    const { file } = req;
+    if (file) {
+      req.body.thumbnail = file.path;
+    }
+    req.body = unflattenObject(req.body);
+    next();
+  },
   validateRequest(ProfileValidation.profileUpdate), // As we are using upsert
   ProfileController.create,
 );

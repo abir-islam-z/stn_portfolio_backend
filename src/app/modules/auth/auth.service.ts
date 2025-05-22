@@ -1,6 +1,8 @@
 import httpStatus from 'http-status';
 import config from '../../config';
 import AppError from '../../errors/AppError';
+import { TProfile } from '../profile/profile.interface';
+import { ProfileModel } from '../profile/profile.model';
 import { UserModel } from '../user/user.model';
 import { TLoginUser } from './auth.interface';
 import { createToken, verifyToken } from './auth.utils';
@@ -15,6 +17,7 @@ const loginUser = async (
 ): Promise<{
   accessToken: string;
   refreshToken: string;
+  profile: TProfile | null;
 }> => {
   const user = await UserModel.findOne({
     email: payload.email,
@@ -50,9 +53,16 @@ const loginUser = async (
     expiresIn: config.jwt.refresh_expires_in as string,
   });
 
+  const findProfile = await ProfileModel.findOne({
+    user: user._id,
+  })
+    .select('-user -_id -__v')
+    .lean();
+
   return {
     accessToken,
     refreshToken,
+    profile: findProfile,
   };
 };
 

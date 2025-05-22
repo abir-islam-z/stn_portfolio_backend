@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
-import { IProfile } from './profile.interface';
+import { TProfile } from './profile.interface';
 
-const profileSchema = new Schema<IProfile>({
+const profileSchema = new Schema<TProfile>({
   name: {
     type: String,
     required: true,
@@ -18,18 +18,21 @@ const profileSchema = new Schema<IProfile>({
     type: String,
     required: true,
   },
-  github: {
-    type: String,
-    required: true,
+  socialLinks: {
+    github: {
+      type: String,
+      required: true,
+    },
+    linkedin: {
+      type: String,
+      required: true,
+    },
+    twitter: {
+      type: String,
+      required: true,
+    },
   },
-  linkedin: {
-    type: String,
-    required: true,
-  },
-  twitter: {
-    type: String,
-    required: true,
-  },
+
   career_summary: {
     type: String,
     required: true,
@@ -45,4 +48,4 @@ const profileSchema = new Schema<IProfile>({
   },
 });
 
-export const ProfileModel = model<IProfile>('profile', profileSchema);
+export const ProfileModel = model<TProfile>('profile', profileSchema);

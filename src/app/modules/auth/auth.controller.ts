@@ -6,9 +6,11 @@ import { sendResponse } from '../../utils/sendResponse';
 import { AuthService } from './auth.service';
 
 const loginUser = catchAsync(async (req: Request, res: Response) => {
-  const { accessToken: token, refreshToken } = await AuthService.loginUser(
-    req.body,
-  );
+  const {
+    accessToken: token,
+    refreshToken,
+    profile,
+  } = await AuthService.loginUser(req.body);
 
   res.cookie('refreshToken', refreshToken, {
     secure:
@@ -24,6 +26,7 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     data: {
       token,
+      profile,
     },
   });
 });

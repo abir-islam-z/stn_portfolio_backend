@@ -13,6 +13,10 @@ router.post(
   auth(),
   upload.single('featuredImage'),
   (req, _res, next) => {
+    const { file } = req;
+    if (file) {
+      req.body.featuredImage = file.path;
+    }
     req.body = unflattenObject(req.body);
     next();
   },
