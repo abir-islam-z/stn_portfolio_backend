@@ -16,34 +16,25 @@ const loginUser = async (
   accessToken: string;
   refreshToken: string;
 }> => {
-  const user = await UserModel.isUserExistsByEmail(payload.email);
+  const user = await UserModel.findOne({
+    email: payload.email,
+  });
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
   }
 
-  const isBlocked = user.isBlocked;
-
-  if (isBlocked) {
-    throw new AppError(
-      httpStatus.FORBIDDEN,
-      'Your account has been deactivated.Please contact support !',
-    );
-  }
-
-  const isPasswordMatched = await UserModel.isPasswordMatched(
-    payload.password,
-    user.password,
-  );
+  const isPasswordMatched = await UserModel.isPasswordMatched({
+    encryptedPassword: user?.password,
+    password: payload.password,
+  });
 
   if (!isPasswordMatched) {
     throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid Credentials');
   }
 
   const jwtPayload = {
-    userId: user._id as unknown as string,
-    role: user.role as string,
-    name: user.name as string,
+    sub: user._id,
     email: user.email as string,
   };
 
@@ -65,68 +56,23 @@ const loginUser = async (
   };
 };
 
-const changePassword = async (payload: {
-  userId: string;
-  oldPassword: string;
-  newPassword: string;
-}): Promise<void> => {
-  const user = await UserModel.findById(payload.userId)
-    .select('+password')
-    .exec();
-
-  if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
-  }
-
-  const isPasswordMatched = await UserModel.isPasswordMatched(
-    payload.oldPassword,
-    user.password,
-  );
-
-  if (!isPasswordMatched) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'Invalid Credentials');
-  }
-
-  user.password = payload.newPassword;
-  user.passwordChangedAt = new Date();
-  await user.save();
-
-  return;
-};
-
 const refreshToken = async (token: string) => {
   // checking if the given token is valid
   const decoded = verifyToken(token, config.jwt.refresh_secret as string);
 
-  const { email, iat } = decoded;
+  const { email } = decoded;
 
   // checking if the user exists
-  const user = await UserModel.isUserExistsByEmail(email);
+  const user = await UserModel.findOne({
+    email,
+  });
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
   }
-  // checking if the user is already deleted
-  const isBlocked = user?.isBlocked;
-
-  if (isBlocked) {
-    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted !');
-  }
-
-  if (
-    user.passwordChangedAt &&
-    UserModel.isJWTIssuedBeforePasswordChanged(
-      user.passwordChangedAt,
-      iat as number,
-    )
-  ) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized !');
-  }
 
   const jwtPayload = {
-    userId: user._id as unknown as string,
-    role: user.role,
-    name: user.name,
+    sub: user._id,
     email: user.email,
   };
 
@@ -144,6 +90,5 @@ const refreshToken = async (token: string) => {
 export const AuthService = {
   registerUser,
   loginUser,
-  changePassword,
   refreshToken,
 };

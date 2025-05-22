@@ -10,7 +10,14 @@ export interface TLoginUser {
 }
 
 export interface TJwtPayload {
-  jwtPayload: { userId: string; role: string };
+  jwtPayload: { sub: string; email: string };
   secret: string;
   expiresIn?: string | number;
+}
+
+export interface TDecodedJwtPayload {
+  sub: string;
+  iat: number;
+  exp: number;
+  email: string;
 }

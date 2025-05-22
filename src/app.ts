@@ -13,15 +13,15 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ['http://localhost:3000'], // Remove the trailing slash
-    credentials: true, // Add this to support credentials
+    origin: '*',
+    credentials: true,
   }),
 );
 
 app.use(morgan('dev'));
 
 // routes
-app.use('/api', router);
+app.use('/api/v1', router);
 
 // Test
 app.get('/test', (_req, res) => {

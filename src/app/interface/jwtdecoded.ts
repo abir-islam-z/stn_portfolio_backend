@@ -1,6 +1,5 @@
 export type DecodedJWTPayload = {
-  userId: string;
-  role: 'user' | 'admin';
+  sub: string;
   iat: number;
   exp: number;
 };

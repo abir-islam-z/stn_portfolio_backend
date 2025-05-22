@@ -1,14 +1,13 @@
 import config from '@app/config';
 import AppError from '@app/errors/AppError';
-import { DecodedJWTPayload } from '@app/interface/jwtdecoded';
-import { TUserRole } from '@modules/user/user.interface';
 import { UserModel } from '@modules/user/user.model';
 import { NextFunction, Request, Response } from 'express';
 import httpStatus from 'http-status';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
+import { TDecodedJwtPayload } from '../modules/auth/auth.interface';
 import catchAsync from '../utils/catchAsync';
 
-const auth = (...requiredRoles: TUserRole[]) => {
+const auth = () => {
   return catchAsync(
     async (req: Request, _res: Response, next: NextFunction) => {
       const token =
@@ -22,29 +21,18 @@ const auth = (...requiredRoles: TUserRole[]) => {
       const decoded = jwt.verify(
         token,
         config.jwt.access_secret as string,
-      ) as JwtPayload;
+      ) as TDecodedJwtPayload;
 
-      const { role, userId } = decoded;
+      const { sub } = decoded;
 
       // checking if the user exists
-      const user = await UserModel.findById(userId);
+      const user = await UserModel.findById(sub);
 
       if (!user) {
         throw new AppError(httpStatus.NOT_FOUND, 'This user is not found !');
       }
 
-      // checking if the user is blocked
-      const isBlocked = user?.isBlocked;
-
-      if (isBlocked) {
-        throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked !');
-      }
-
-      if (requiredRoles && !requiredRoles.includes(role)) {
-        throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized!');
-      }
-
-      req.user = decoded as DecodedJWTPayload;
+      req.user = decoded;
       next();
     },
   );

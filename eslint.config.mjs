@@ -13,7 +13,6 @@ export default [
     rules: {
       semi: 'error',
       'prefer-const': 'error',
-      'no-unused-vars': 'warn',
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-this-alias': 'off',
       'no-unused-expressions': 'warn',

@@ -28,6 +28,16 @@ const loginUser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const registerUser = catchAsync(async (req: Request, res: Response) => {
+  await AuthService.registerUser(req.body);
+
+  sendResponse(res, {
+    success: true,
+    message: 'User registered successfully',
+    statusCode: httpStatus.CREATED,
+  });
+});
+
 const refreshToken = catchAsync(async (req: Request, res: Response) => {
   const { refreshToken } = req.cookies;
   const token = await AuthService.refreshToken(refreshToken);
@@ -44,4 +54,5 @@ const refreshToken = catchAsync(async (req: Request, res: Response) => {
 export const AuthController = {
   loginUser,
   refreshToken,
+  registerUser,
 };

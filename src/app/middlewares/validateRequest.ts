@@ -1,11 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
-import { AnyZodObject } from 'zod';
+import { AnyZodObject, ZodEffects } from 'zod';
 import catchAsync from '../utils/catchAsync';
 
 type ValidatePart = 'body' | 'query' | 'cookies' | 'params';
 
 const validateRequest = (
-  schema: AnyZodObject,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  schema: AnyZodObject | ZodEffects<any, any, any>,
   validatePart: ValidatePart[] = ['body'],
 ) => {
   return catchAsync(
