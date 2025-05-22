@@ -12,7 +12,16 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: () => ({
-    folder: 'autohive',
+    folder: 'portfolio',
+    transformation: [
+      {
+        width: 500,
+        height: 500,
+        crop: 'limit',
+        quality: 'auto',
+        fetch_format: 'webp',
+      },
+    ],
     allowed_formats: ['jpg', 'png', 'webp', 'avif', 'jpeg'],
   }),
 });

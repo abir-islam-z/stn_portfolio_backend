@@ -9,5 +9,6 @@ export type IProfile = {
   linkedin: string;
   twitter: string;
   career_summary: string;
+  thumbnail: string;
   user: Types.ObjectId;
 };

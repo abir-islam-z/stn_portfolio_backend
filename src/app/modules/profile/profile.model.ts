@@ -34,6 +34,10 @@ const profileSchema = new Schema<IProfile>({
     type: String,
     required: true,
   },
+  thumbnail: {
+    type: String,
+    required: true,
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',

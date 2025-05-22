@@ -1,32 +1,8 @@
 import { z } from 'zod';
 
-/* 
-{
-  description: string;
-  featuredImage: string;
-  personalInfo: {
-    job_title: string;
-    experience: string;
-    location: string;
-    email: string;
-    phone: string;
-    availability: string;
-  };
-  features: {
-    icon: string;
-    title: string;
-    description: string;
-  }[];
-};
-
-*/
-
 const aboutCreate = z.object({
   description: z.string({
     required_error: 'Description is required',
-  }),
-  featuredImage: z.string({
-    required_error: 'Featured image is required',
   }),
   personalInfo: z.object({
     job_title: z.string({
